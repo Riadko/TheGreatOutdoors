@@ -15,12 +15,17 @@ import {
   Zap,
   Maximize2,
   Coffee,
+  PlayCircle,
 } from 'lucide-react';
 import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp, FaFacebookMessenger, FaEnvelope } from 'react-icons/fa6';
 import ReactCountryFlag from 'react-country-flag';
 
 const ORDER_API_URL = import.meta.env.VITE_ORDER_API_URL || '/.netlify/functions/order-notify';
 const LEGACY_SCRIPT_URL = import.meta.env.VITE_SCRIPT_URL || '';
+const FB_REELS = {
+  bbq: 'https://web.facebook.com/reel/906470382108067',
+  rechaud: 'https://web.facebook.com/reel/1947114682855400'
+};
 
 const ASSETS = {
   logo: '/images/logo-1.png',
@@ -35,7 +40,8 @@ const ASSETS = {
   rechaudDetailCarousel: ['/images/rechaud2.png', '/images/rechaud4.png', '/images/rechaud5.png'],
   bbqDetailVideoWebm: '/images/outputvid.webm',
   bbqDetailVideo: '/images/outputvid.mov',
-  rechaudDetailVideo: '/images/file.mp4'
+  rechaudDetailVideo: '/images/file.mp4',
+  videoWatermark: '/images/logo-2.png'
 };
 
 const WILAYAS = [
@@ -152,7 +158,7 @@ const PRODUCTS = [
   {
     id: 'bbq-petit',
     name: { fr: 'Barbecue Démontable (Petit)', ar: 'شواية ديمونطابل (صغيرة)' },
-    price: 3000,
+    price: 2900,
     size: '30×20 cm',
     description: { 
       fr: 'Pratique, léger, se range dans un petit sac.\nIdéal pour toutes vos sorties en forêt, plage ou camping.', 
@@ -167,7 +173,7 @@ const PRODUCTS = [
   {
     id: 'bbq-grand',
     name: { fr: 'Barbecue Démontable (Grand)', ar: 'شواية ديمونطابل (كبيرة)' },
-    price: 4000,
+    price: 3900,
     size: '50×30 cm',
     description: { 
       fr: 'Plus de surface, stable et robuste pour les passionnés de grillades.', 
@@ -203,6 +209,7 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [activeVideo, setActiveVideo] = useState(null);
   const [productImageIndexes, setProductImageIndexes] = useState({});
   const [rechaudPosterIndex, setRechaudPosterIndex] = useState(0);
   const [isWhyInView, setIsWhyInView] = useState(false);
@@ -347,6 +354,18 @@ export default function App() {
     setSelectedProduct(product);
     setIsModalOpen(true);
     setIsSuccess(false);
+  };
+
+  const openVideoModal = (video) => {
+    setActiveVideo(video);
+  };
+
+  const getFacebookEmbedUrl = (url) => (
+    `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=true&mute=1&width=560&height=996`
+  );
+
+  const closeVideoModal = () => {
+    setActiveVideo(null);
   };
 
   const closeOrderModal = () => {
@@ -582,6 +601,8 @@ export default function App() {
                 playsInline
                 preload="metadata"
                 poster={ASSETS.bbqDetailBackground}
+                controlsList="nodownload noplaybackrate"
+                disablePictureInPicture
                 className="w-full h-full min-h-[12rem] sm:min-h-[16rem] object-cover object-left"
               >
                 <source src={ASSETS.bbqDetailVideoWebm} type="video/webm" />
@@ -607,6 +628,16 @@ export default function App() {
               <button onClick={() => openOrderModal(PRODUCTS[1], { allowBbqChoice: true })} className="why-cta w-full sm:w-auto min-w-[220px] px-10 py-5 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-[0_12px_30px_rgba(234,88,12,0.4)] hover:from-orange-600 hover:to-amber-600 transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 mx-auto sm:mx-0">
                 <ShoppingBag className="w-4 h-4" /> {t.order_btn}
               </button>
+              <button
+                onClick={() => openVideoModal({
+                  title: t.bbq_detail_title,
+                  poster: ASSETS.bbqDetailBackground,
+                  externalUrl: FB_REELS.bbq
+                })}
+                className="w-full sm:w-auto min-w-[220px] px-8 py-5 rounded-2xl font-black text-sm uppercase tracking-widest border border-white/25 bg-white/10 hover:bg-white/20 transition-all flex items-center justify-center gap-2 mx-auto sm:mx-0"
+              >
+                <PlayCircle className="w-4 h-4" /> {t.video_label}
+              </button>
             </div>
           </div>
           <div className="hidden lg:block order-2 lg:order-2 relative w-full max-w-[460px] lg:max-w-none mx-auto lg:justify-self-end lg:translate-x-12 rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/5 bg-black/20">
@@ -617,6 +648,8 @@ export default function App() {
               playsInline
               preload="metadata"
               poster={ASSETS.bbqDetailBackground}
+              controlsList="nodownload noplaybackrate"
+              disablePictureInPicture
               className="w-full h-full min-h-[20rem] sm:min-h-[22rem] md:min-h-[24rem] object-cover object-left"
             >
               <source src={ASSETS.bbqDetailVideoWebm} type="video/webm" />
@@ -732,6 +765,16 @@ export default function App() {
             <div className={`flex flex-col sm:flex-row gap-3 pt-4 ${lang === 'ar' ? 'sm:justify-end' : 'sm:justify-start'}`}>
               <button onClick={() => openOrderModal(PRODUCTS[2])} className="why-cta w-full sm:w-auto min-w-[220px] px-10 py-5 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-[0_12px_30px_rgba(234,88,12,0.4)] hover:from-orange-600 hover:to-amber-600 transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 mx-auto sm:mx-0">
                 <ShoppingBag className="w-4 h-4" /> {t.order_btn}
+              </button>
+              <button
+                onClick={() => openVideoModal({
+                  title: t.rechaud_detail_title,
+                  poster: ASSETS.rechaudDetailImage,
+                  externalUrl: FB_REELS.rechaud
+                })}
+                className="w-full sm:w-auto min-w-[220px] px-8 py-5 rounded-2xl font-black text-sm uppercase tracking-widest border border-white/25 bg-white/10 hover:bg-white/20 transition-all flex items-center justify-center gap-2 mx-auto sm:mx-0"
+              >
+                <PlayCircle className="w-4 h-4" /> {t.video_label}
               </button>
             </div>
           </div>
@@ -854,6 +897,62 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Video Modal */}
+      {activeVideo && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-4">
+          <div className="absolute inset-0 bg-zinc-950/90 backdrop-blur-md" onClick={closeVideoModal} />
+          <div className={`relative w-full animate-slide-up ${activeVideo.externalUrl ? 'max-w-[380px]' : 'max-w-5xl rounded-3xl overflow-hidden border border-white/10 bg-black shadow-2xl'}`}>
+            <div className={`flex items-center justify-between text-white ${activeVideo.externalUrl ? 'px-3 py-2 mb-2' : 'px-5 py-4 border-b border-white/10'}`}>
+              <h3 className="font-black text-lg sm:text-xl uppercase tracking-wide whitespace-pre-line">{activeVideo.title}</h3>
+              <button
+                type="button"
+                onClick={closeVideoModal}
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                aria-label="Close video"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className={`relative ${activeVideo.externalUrl ? '' : 'p-2 sm:p-4'}`}>
+              {activeVideo.externalUrl ? (
+                <div className="mx-auto w-full max-w-[360px]">
+                  <div className="relative w-full" style={{ paddingTop: '177.78%' }}>
+                    <iframe
+                      title={activeVideo.title}
+                      src={getFacebookEmbedUrl(activeVideo.externalUrl)}
+                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                      allowFullScreen
+                      className="absolute inset-0 h-full w-full rounded-2xl"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <video
+                  controls
+                  autoPlay
+                  playsInline
+                  preload="metadata"
+                  poster={activeVideo.poster}
+                  controlsList="nodownload noplaybackrate"
+                  disablePictureInPicture
+                  className="w-full max-h-[72vh] rounded-2xl bg-black object-contain"
+                >
+                  {activeVideo.sources?.map((source) => (
+                    <source key={source.src} src={source.src} type={source.type} />
+                  ))}
+                </video>
+              )}
+              <img
+                src={ASSETS.videoWatermark}
+                alt=""
+                aria-hidden="true"
+                className="pointer-events-none absolute top-1/2 left-1/2 w-64 sm:w-76 -translate-x-1/2 -translate-y-1/2 opacity-60"
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal */}
       {isModalOpen && (
