@@ -11,6 +11,11 @@ const required = [
   'TWILIO_WHATSAPP_TO',
 ];
 
+const toWhatsAppAddress = (value) => {
+  if (!value) return '';
+  return value.startsWith('whatsapp:') ? value : `whatsapp:${value}`;
+};
+
 const formatMessage = (order) => {
   return [
     'Nouvelle commande',
@@ -27,8 +32,8 @@ const formatMessage = (order) => {
 const sendTwilioWhatsApp = async (message) => {
   const sid = process.env.TWILIO_ACCOUNT_SID;
   const token = process.env.TWILIO_AUTH_TOKEN;
-  const from = process.env.TWILIO_WHATSAPP_FROM;
-  const to = process.env.TWILIO_WHATSAPP_TO;
+  const from = toWhatsAppAddress(process.env.TWILIO_WHATSAPP_FROM);
+  const to = toWhatsAppAddress(process.env.TWILIO_WHATSAPP_TO);
 
   const auth = Buffer.from(`${sid}:${token}`).toString('base64');
   const endpoint = `https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`;
@@ -75,7 +80,7 @@ export const handler = async (event) => {
   if (missing.length) {
     return json(500, {
       ok: false,
-      error: `Missing env vars: ${missing.join(', ')}`,
+      error: `Missing env vars: ${missing.join(', ')}. Add them in Netlify > Site configuration > Environment variables, then redeploy.`,
     });
   }
 

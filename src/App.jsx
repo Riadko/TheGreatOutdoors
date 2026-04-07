@@ -393,13 +393,27 @@ export default function App() {
         });
       }
 
+      if (response.type === 'opaque') {
+        setIsSuccess(true);
+        setFormData({ name: '', phone: '', wilaya: '16 - Alger', quantity: 1 });
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error('order-notify failed');
+        let details = 'order-notify failed';
+        try {
+          const data = await response.json();
+          details = data?.error || details;
+        } catch {
+          // Keep generic message if response is not JSON.
+        }
+        throw new Error(details);
       }
 
       setIsSuccess(true);
       setFormData({ name: '', phone: '', wilaya: '16 - Alger', quantity: 1 });
     } catch (error) {
+      console.error('Order submit error:', error);
       alert("Error / خطأ");
     } finally {
       setIsSubmitting(false);
