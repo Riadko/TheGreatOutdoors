@@ -28,20 +28,19 @@ const FB_REELS = {
 };
 
 const ASSETS = {
-  logo: '/images/logo-1.png',
-  bbqPetit: '/images/bbq-petit-2.png',
-  bbqGrand: '/images/bbq-grand-3.png',
-  rechaudBois: '/images/rechaud4.png',
-  hero: '/images/hero-5.png',
-  whyBg: '/images/bg2.jpg',
-  yalidineLogo: '/images/yalidine-logo.png',
-  bbqDetailBackground: '/images/bbq_grand2.png',
+  logo: '/images/logo-1.webp',
+  bbqPetit: '/images/bbq-petit-2.webp',
+  bbqGrand: '/images/bbq-grand-3.webp',
+  rechaudBois: '/images/rechaud4.webp',
+  hero: '/images/hero-5.webp',
+  whyBg: '/images/bg2.webp',
+  yalidineLogo: '/images/yalidine-logo.webp',
+  bbqDetailBackground: '/images/bbq_grand2.webp',
   rechaudDetailImage: '/images/rechaud3.webp',
-  rechaudDetailCarousel: ['/images/rechaud2.png', '/images/rechaud4.png', '/images/rechaud5.png'],
+  rechaudDetailCarousel: ['/images/rechaud2.webp', '/images/rechaud4.webp', '/images/rechaud5.webp'],
   bbqDetailVideoWebm: '/images/outputvid.webm',
-  bbqDetailVideo: '/images/outputvid.mov',
   rechaudDetailVideo: '/images/file.mp4',
-  videoWatermark: '/images/logo-2.png'
+  videoWatermark: '/images/logo-2.webp'
 };
 
 const WILAYAS = [
@@ -72,6 +71,10 @@ const TRANSLATIONS = {
     banner_delivery: 'Livraison partout en Algérie',
     banner_payment: 'Paiement à la livraison',
     banner_quality: 'Qualité Garantie',
+    banner_whatsapp: 'Réponse rapide via WhatsApp',
+    banner_help_line1: 'Des questions ou envie de commander rapidement ?',
+    banner_help_line2: 'Contactez-nous sur WhatsApp',
+    banner_help_cta: 'Commander via WhatsApp',
     section_title: 'Nos meilleures ventes',
     section_desc: 'Choisissez votre équipement et commencez votre prochaine aventure',
     details_title: 'Plus d\'infos sur nos équipements',
@@ -118,6 +121,10 @@ const TRANSLATIONS = {
     banner_delivery: 'التوصيل لكل الولايات',
     banner_payment: 'الدفع عند الاستلام',
     banner_quality: 'جودة مضمونة',
+    banner_whatsapp: 'رد سريع على واتساب',
+    banner_help_line1: 'عندك أسئلة أو حاب تدير طلبية بسرعة؟',
+    banner_help_line2: 'تواصل معنا عبر واتساب',
+    banner_help_cta: 'الطلب عبر واتساب',
     section_title: 'منتجاتنا الأكثر طلباً',
     section_desc: 'اختر عتادك وابدأ مغامرتك القادمة',
     details_title: 'معلومات أكثر على منتجاتنا',
@@ -166,7 +173,7 @@ const PRODUCTS = [
     },
     images: [
       ASSETS.bbqPetit,
-      '/images/bbq_petit3.png',
+      '/images/bbq_petit3.webp',
       '/images/bbq_petit2.webp'
     ]
   },
@@ -181,8 +188,8 @@ const PRODUCTS = [
     },
     images: [
       ASSETS.bbqGrand,
-      '/images/bbq_grand2.png',
-      '/images/bbq_grand3.png'
+      '/images/bbq_grand2.webp',
+      '/images/bbq_grand3.webp'
     ]
   },
   {
@@ -196,8 +203,8 @@ const PRODUCTS = [
     },
     images: [
       ASSETS.rechaudBois,
-      '/images/rechaud2.png',
-      '/images/rechaud3.png'
+      '/images/rechaud2.webp',
+      '/images/rechaud3.webp'
     ]
   }
 ];
@@ -446,7 +453,9 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
              <img src={ASSETS.logo} alt="Logo" className="h-18 md:h-20 w-auto rounded" />
-             <span className="hidden sm:block font-black text-lg tracking-tighter">THE GREAT OUTDOORS</span>
+             <span className="hidden sm:block font-black text-2xl tracking-tighter">
+               The Great <span className="text-orange-500">Outdoors</span>
+              </span>
           </div>
           
           <div className="flex items-center gap-4">
@@ -479,68 +488,79 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <header
-        className="relative pt-32 pb-20 px-4 text-center text-white overflow-hidden"
-        style={{
-          backgroundImage: `linear-gradient(rgba(9, 9, 11, 0.66), rgba(9, 9, 11, 0.66)), url(${ASSETS.hero})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      >
-        {/* Background Overlay */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-orange-500/20 to-transparent"></div>
-        </div>
-        
-        <div className="relative max-w-4xl mx-auto z-10">
-          <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold mb-6 border border-white/20">
-            <Truck className="w-4 h-4 text-orange-400" /> 
-            <span>{renderTextWithYalidineLogo(t.hero_badge)}</span>
+      <main id="main">
+        {/* Hero Section */}
+        <header
+          className="relative pt-32 pb-20 px-4 text-center text-white overflow-hidden"
+          style={{
+            backgroundImage: `linear-gradient(rgba(9, 9, 11, 0.66), rgba(9, 9, 11, 0.66)), url(${ASSETS.hero})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        >
+          {/* Background Overlay */}
+          <div className="absolute inset-0 opacity-20 pointer-events-none">
+              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-orange-500/20 to-transparent"></div>
           </div>
-          <h1 className="title-font text-4xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
-            {t.hero_title_1} <br />
-            <span className="text-orange-500 italic drop-shadow-sm">{t.hero_title_2}</span>
-          </h1>
-          <p
-            className="text-lg text-neutral-300 mb-10 max-w-2xl mx-auto font-medium whitespace-pre-line text-center"
-            dir={lang === 'ar' ? 'rtl' : 'ltr'}
-            style={lang === 'ar' ? { unicodeBidi: 'plaintext' } : undefined}
-          >
-            {t.hero_desc}
-          </p>
-          <button 
-            onClick={() => document.getElementById('produits').scrollIntoView({ behavior: 'smooth' })}
-            className="why-cta px-10 py-5 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-2xl font-black text-xl shadow-[0_12px_30px_rgba(234,88,12,0.4)] hover:from-orange-600 hover:to-amber-600 transition-all transform hover:scale-105 active:scale-95"
-          >
-            {t.cta_hero}
-          </button>
-        </div>
-      </header>
+          
+          <div className="relative max-w-4xl mx-auto z-10">
+            <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold mb-6 border border-white/20">
+              <Truck className="w-4 h-4 text-orange-400" /> 
+              <span>{renderTextWithYalidineLogo(t.hero_badge)}</span>
+            </div>
+            <h1 className="title-font text-4xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
+              {t.hero_title_1} <br />
+              <span className="text-orange-500 italic drop-shadow-sm">{t.hero_title_2}</span>
+            </h1>
+            <p
+              className="text-lg text-neutral-300 mb-10 max-w-2xl mx-auto font-medium whitespace-pre-line text-center"
+              dir={lang === 'ar' ? 'rtl' : 'ltr'}
+              style={lang === 'ar' ? { unicodeBidi: 'plaintext' } : undefined}
+            >
+              {t.hero_desc}
+            </p>
+            <button 
+              onClick={() => document.getElementById('produits').scrollIntoView({ behavior: 'smooth' })}
+              className="why-cta px-10 py-5 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-2xl font-black text-xl shadow-[0_12px_30px_rgba(234,88,12,0.4)] hover:from-orange-600 hover:to-amber-600 transition-all transform hover:scale-105 active:scale-95"
+            >
+              {t.cta_hero}
+            </button>
+          </div>
+        </header>
 
-      {/* Delivery Banner */}
-      <div className="bg-white border-y border-neutral-100 py-5">
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-12 text-neutral-500 font-bold text-sm">
-           <span className="flex items-center gap-2"><Truck className="text-orange-600 w-5 h-5"/> {t.banner_delivery}
-           <ReactCountryFlag
-              countryCode="DZ"
-              svg
-              aria-label="Algeria"
-              style={{ width: '1.25rem', height: '0.875rem', borderRadius: '2px' }}
-            /></span>
-           <span className="hidden sm:inline text-neutral-200">|</span>
-           <span className="flex items-center gap-2"><ShoppingBag className="text-orange-600 w-5 h-5"/> {t.banner_payment}</span>
-           <span className="hidden sm:inline text-neutral-200">|</span>
-           <span className="flex items-center gap-2"><CheckCircle className="text-orange-600 w-5 h-5"/> {t.banner_quality}</span>
+        {/* Delivery Banner */}
+        <div className="bg-white border-y border-neutral-100 py-5">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-12 text-neutral-700 font-bold text-sm">
+             <span className="flex items-center gap-2"><Truck className="text-orange-600 w-5 h-5"/> {t.banner_delivery}
+             <ReactCountryFlag
+                countryCode="DZ"
+                svg
+                aria-label="Algeria"
+                style={{ width: '1.25rem', height: '0.875rem', borderRadius: '2px' }}
+              /></span>
+             <span className="hidden sm:inline text-neutral-200">|</span>
+             <span className="flex items-center gap-2"><ShoppingBag className="text-orange-600 w-5 h-5"/> {t.banner_payment}</span>
+             <span className="hidden sm:inline text-neutral-200">|</span>
+             <span className="flex items-center gap-2"><CheckCircle className="text-orange-600 w-5 h-5"/> {t.banner_quality}</span>
+             <span className="hidden sm:inline text-neutral-200">|</span>
+             <span className="flex items-center gap-2"><FaWhatsapp className="text-emerald-500 w-5 h-5"/> {t.banner_whatsapp}</span>
+          </div>
         </div>
-      </div>
 
-      {/* Products Grid */}
-      <section id="produits" className="max-w-7xl mx-auto px-4 py-24">
-        <div className="text-center mb-16">
-          <h2 className="title-font text-4xl font-black mb-4">{t.section_title}</h2>
-          <p className="text-neutral-500 font-medium">{t.section_desc}</p>
-        </div>
+        {/* Products Grid */}
+        <section id="produits" className="max-w-7xl mx-auto px-4 pt-14 pb-14">
+          <div className="text-center mb-16">
+            <h2 className="title-font text-4xl font-black mb-4">
+              {lang === 'fr' ? (
+                <>
+                  Nos meilleures <span className="text-orange-500">ventes</span>
+                </>
+              ) : (
+                t.section_title
+              )}
+            </h2>
+            <p className="text-neutral-500 font-medium">{t.section_desc}</p>
+          </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {PRODUCTS.map((product) => (
@@ -554,6 +574,8 @@ export default function App() {
                   src={resolveProductImage(product)} 
                   alt={product.name[lang]} 
                   onError={() => handleProductImageError(product.id)}
+                  loading="lazy"
+                  decoding="async"
                   className="carousel-fade-image w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
               </div>
@@ -578,7 +600,46 @@ export default function App() {
             </div>
           ))}
         </div>
-      </section>
+
+        </section>
+
+        {/* WhatsApp Help Banner */}
+        <section className="max-w-7xl mx-auto px-4 pb-12">
+          <div className={`rounded-2xl border border-orange-200 bg-orange-50 p-4 sm:p-5 ${lang === 'ar' ? 'text-right' : 'text-left'}`}>
+              <div className={`flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between ${lang === 'ar' ? 'sm:flex-row-reverse' : ''}`}>
+                <div className={`flex items-center gap-3 ${lang === 'ar' ? 'flex-row-reverse' : ''}`}>
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-emerald-200 bg-emerald-100 text-emerald-500">
+                    <FaWhatsapp className="w-4 h-4" />
+                  </span>
+                  <div>
+                  <p
+                    className="text-sm sm:text-lg font-black text-neutral-900"
+                    dir={lang === 'ar' ? 'rtl' : 'ltr'}
+                    style={lang === 'ar' ? { unicodeBidi: 'plaintext' } : undefined}
+                  >
+                    {t.banner_help_line1}
+                  </p>
+                  <p
+                    className="text-sm sm:text-lg font-black text-orange-600"
+                    dir={lang === 'ar' ? 'rtl' : 'ltr'}
+                    style={lang === 'ar' ? { unicodeBidi: 'plaintext' } : undefined}
+                  >
+                    {t.banner_help_line2}
+                  </p>
+                  </div>
+                </div>
+                <a
+                  href="https://wa.me/213797350430"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-base font-black text-white shadow-[0_10px_28px_rgba(16,185,129,0.35)] transition-all hover:bg-emerald-600 active:scale-95"
+                >
+                  <FaWhatsapp className="w-4 h-4" />
+                  {t.banner_help_cta}
+                </a>
+              </div>
+          </div>
+        </section>
 
       {/* Product Details Section */}
       <section
@@ -606,7 +667,6 @@ export default function App() {
                 className="w-full h-full min-h-[12rem] sm:min-h-[16rem] object-cover object-left"
               >
                 <source src={ASSETS.bbqDetailVideoWebm} type="video/webm" />
-                <source src={ASSETS.bbqDetailVideo} type="video/quicktime" />
               </video>
             </div>
             <p
@@ -653,7 +713,6 @@ export default function App() {
               className="w-full h-full min-h-[20rem] sm:min-h-[22rem] md:min-h-[24rem] object-cover object-left"
             >
               <source src={ASSETS.bbqDetailVideoWebm} type="video/webm" />
-              <source src={ASSETS.bbqDetailVideo} type="video/quicktime" />
             </video>
           </div>
         </div>
@@ -680,6 +739,8 @@ export default function App() {
                   src={poster}
                   alt={`Rechaud slide ${index + 1}`}
                   onError={handleRechaudPosterError}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full min-h-[24rem] flex-shrink-0 object-contain bg-black/35"
                 />
               ))}
@@ -833,12 +894,29 @@ export default function App() {
       </section>
 
       {/* Footer */}
-      <footer id="contact" className="bg-white pt-24 pb-12 border-t border-neutral-100">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 text-center md:text-start">
+      <footer id="contact" className="bg-white pt-0 pb-6 border-t border-neutral-100">
+        <div className="bg-white border-y border-neutral-100 py-5">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-12 text-neutral-500 font-bold text-sm">
+            <span className="flex items-center gap-2"><Truck className="text-orange-600 w-5 h-5"/> {t.banner_delivery}
+            <ReactCountryFlag
+                countryCode="DZ"
+                svg
+                aria-label="Algeria"
+                style={{ width: '1.25rem', height: '0.875rem', borderRadius: '2px' }}
+              /></span>
+            <span className="hidden sm:inline text-neutral-200">|</span>
+            <span className="flex items-center gap-2"><ShoppingBag className="text-orange-600 w-5 h-5"/> {t.banner_payment}</span>
+            <span className="hidden sm:inline text-neutral-200">|</span>
+            <span className="flex items-center gap-2"><CheckCircle className="text-orange-600 w-5 h-5"/> {t.banner_quality}</span>
+            <span className="hidden sm:inline text-neutral-200">|</span>
+            <span className="flex items-center gap-2"><FaWhatsapp className="text-emerald-500 w-5 h-5"/> {t.banner_whatsapp}</span>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-start">
             <div className="md:text-left flex flex-col items-center md:items-center">
-              <div className="flex items-center justify-center gap-3 mb-6">
-                 <img src={ASSETS.logo} alt="Logo" className="h-20 md:h-24 w-auto" />
+              <div className="flex items-center justify-center gap-3 mb-4">
+                 <img src={ASSETS.logo} alt="Logo" className="h-20 md:h-28 w-auto" />
               </div>
               <p
                 className={`text-neutral-500 font-medium whitespace-pre-line ${lang === 'ar' ? 'text-right' : ''}`}
@@ -856,7 +934,7 @@ export default function App() {
             </div>
             
             <div className="text-center flex flex-col items-center">
-              <h4 className="title-font font-black mb-8 text-neutral-400 uppercase tracking-widest text-xs">{t.footer_social}</h4>
+              <h3 className="title-font font-black mb-6 text-orange-500 uppercase tracking-widest text-sm">{t.footer_social}</h3>
               <div className="flex justify-center gap-4">
                 <a href="https://www.facebook.com/thegreatoutdoorsgrill" target="_blank" className="p-4 bg-neutral-100 text-neutral-600 rounded-2xl hover:bg-blue-600 hover:text-white transition-all" aria-label="Facebook">
                   <FaFacebookF className="w-5 h-5" />
@@ -874,7 +952,7 @@ export default function App() {
             </div>
 
             <div className="md:text-right md:pl-8 xl:pl-12">
-              <h4 className="title-font font-black mb-8 text-neutral-400 uppercase tracking-widest text-xs">{t.footer_phone}</h4>
+              <h3 className="title-font font-black mb-6 text-orange-500 uppercase tracking-widest text-sm">{t.footer_phone}</h3>
               <div className="inline-flex flex-col items-center md:items-end">
                 <p className="text-3xl font-black text-zinc-950 mb-2">
                   <a href="tel:+213797350430" target="_blank" rel="noopener noreferrer">
@@ -886,7 +964,7 @@ export default function App() {
             </div>
           </div>
           
-          <div className="mt-20 pt-8 border-t border-neutral-100 text-center text-neutral-400 font-bold text-xs flex items-center justify-center gap-2">
+          <div className="mt-12 pt-6 border-t border-neutral-100 text-center text-neutral-600 font-bold text-xs flex items-center justify-center gap-2">
             <span>&copy; {new Date().getFullYear()} THE GREAT OUTDOORS. MADE IN ALGERIA</span>
             <ReactCountryFlag
               countryCode="DZ"
@@ -1192,6 +1270,7 @@ export default function App() {
           background-size: 1.5em;
         }
       `}</style>
+      </main>
     </div>
   );
 }
