@@ -204,7 +204,7 @@ const PRODUCTS = [
     images: [
       ASSETS.rechaudBois,
       '/images/rechaud2.webp',
-      '/images/rechaud3.webp'
+      '/images/rechaud3.png'
     ]
   }
 ];
