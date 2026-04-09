@@ -1,0 +1,23 @@
+{
+  "name": "The Great Outdoors",
+  "short_name": "TGO",
+  "description": "Barbecues et rechauds demontables en Algerie.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#ea580c",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "/images/logo-1.webp",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/logo-2.webp",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}
