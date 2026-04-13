@@ -17,15 +17,20 @@ const toWhatsAppAddress = (value) => {
 };
 
 const formatMessage = (order) => {
+  const deliveryTypeLabel = order.deliveryType === 'home' ? 'A domicile' : 'Stop desk';
   return [
     'Nouvelle commande',
-    `Produit: ${order.product || '-'}`,
-    `Quantite: ${order.quantity || '-'}`,
-    `Nom: ${order.name || '-'}`,
-    `Telephone: ${order.phone || '-'}`,
-    `Wilaya: ${order.wilaya || '-'}`,
-    `Total: ${order.total || '-'} DA`,
-    `Date: ${order.date || '-'}`,
+    `Produit: ${order.product ?? '-'}`,
+    `Quantite: ${order.quantity ?? '-'}`,
+    `Nom: ${order.name ?? '-'}`,
+    `Telephone: ${order.phone ?? '-'}`,
+    `Wilaya: ${order.wilaya ?? '-'}`,
+    `Livraison: ${deliveryTypeLabel}`,
+    `Adresse: ${order.deliveryType === 'home' ? (order.address ?? '-') : '-'}`,
+    `Total produits: ${order.productsTotal ?? '-'} DA`,
+    `Frais livraison: ${order.deliveryFee ?? '-'} DA`,
+    `Total a payer: ${order.total ?? '-'} DA`,
+    `Date: ${order.date ?? '-'}`,
   ].join('\n');
 };
 
@@ -78,13 +83,13 @@ const sendTwilioWhatsAppTemplate = async (order) => {
     To: to,
     ContentSid: contentSid,
     ContentVariables: JSON.stringify({
-      1: order.product || '-',
-      2: order.quantity || '-',
-      3: order.name || '-',
-      4: order.phone || '-',
-      5: order.wilaya || '-',
-      6: `${order.total || '-'} DA`,
-      7: order.date || '-',
+      1: order.product ?? '-',
+      2: order.quantity ?? '-',
+      3: order.name ?? '-',
+      4: order.phone ?? '-',
+      5: order.wilaya ?? '-',
+      6: `${order.total ?? '-'} DA`,
+      7: order.date ?? '-',
     }),
   });
 
@@ -109,10 +114,18 @@ const forwardToStorageWebhook = async (order) => {
   const webhook = process.env.ORDER_STORAGE_WEBHOOK;
   if (!webhook) return;
 
+  // Keep zero values explicit for scripts using truthy checks (e.g., value || '-').
+  const sheetSafeOrder = {
+    ...order,
+    deliveryFee: String(order.deliveryFee ?? ''),
+    productsTotal: String(order.productsTotal ?? ''),
+    total: String(order.total ?? ''),
+  };
+
   await fetch(webhook, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(order),
+    body: JSON.stringify(sheetSafeOrder),
   });
 };
 

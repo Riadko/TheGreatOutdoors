@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Flame, 
+  House,
   Truck, 
   Phone, 
   CheckCircle, 
@@ -58,6 +59,77 @@ const WILAYAS = [
   "54 - Timimoun", "55 - Touggourt", "56 - Djanet", "57 - In Salah", "58 - In Guezzam"
 ];
 
+// Coller ici vos tarifs par code wilaya:
+// Exemple: '16': { home: 600, stopDesk: 400 }
+const DELIVERY_PRICES_BY_WILAYA_CODE = {
+  '01': { home: 1650, stopDesk: 1550 },
+  '02': { home: 700, stopDesk: 600 },
+  '03': { home: 850, stopDesk: 700 },
+  '04': { home: 700, stopDesk: 600 },
+  '05': { home: 700, stopDesk: 600 },
+  '06': { home: 700, stopDesk: 600 },
+  '07': { home: 850, stopDesk: 700 },
+  '08': { home: 1650, stopDesk: 1550 },
+  '09': { home: 550, stopDesk: 450 },
+  '10': { home: 700, stopDesk: 600 },
+  '11': { home: 1650, stopDesk: 1550 },
+  '12': { home: 850, stopDesk: 700 },
+  '13': { home: 700, stopDesk: 600 },
+  '14': { home: 700, stopDesk: 600 },
+  '15': { home: 700, stopDesk: 600 },
+  '16': { home: 500, stopDesk: 0 },
+  '17': { home: 850, stopDesk: 700 },
+  '18': { home: 700, stopDesk: 600 },
+  '19': { home: 700, stopDesk: 600 },
+  '20': { home: 700, stopDesk: 600 },
+  '21': { home: 700, stopDesk: 600 },
+  '22': { home: 700, stopDesk: 600 },
+  '23': { home: 700, stopDesk: 600 },
+  '24': { home: 700, stopDesk: 600 },
+  '25': { home: 700, stopDesk: 600 },
+  '26': { home: 700, stopDesk: 600 },
+  '27': { home: 700, stopDesk: 600 },
+  '28': { home: 700, stopDesk: 600 },
+  '29': { home: 700, stopDesk: 600 },
+  '30': { home: 850, stopDesk: 700 },
+  '31': { home: 700, stopDesk: 600 },
+  '32': { home: 1650, stopDesk: 1550 },
+  '33': { home: 1650, stopDesk: 1550 },
+  '34': { home: 700, stopDesk: 600 },
+  '35': { home: 550, stopDesk: 450 },
+  '36': { home: 700, stopDesk: 600 },
+  '37': { home: 1650, stopDesk: 1550 },
+  '38': { home: 700, stopDesk: 600 },
+  '39': { home: 850, stopDesk: 700 },
+  '40': { home: 700, stopDesk: 600 },
+  '41': { home: 700, stopDesk: 600 },
+  '42': { home: 550, stopDesk: 450 },
+  '43': { home: 700, stopDesk: 600 },
+  '44': { home: 700, stopDesk: 600 },
+  '45': { home: 1650, stopDesk: 1550 },
+  '46': { home: 700, stopDesk: 600 },
+  '47': { home: 850, stopDesk: 700 },
+  '48': { home: 700, stopDesk: 600 },
+  '49': { home: 850, stopDesk: 700 },
+  '50': { home: 850, stopDesk: 700 },
+  '51': { home: 850, stopDesk: 700 },
+  '52': { home: 1650, stopDesk: 1550 },
+  '53': { home: 1650, stopDesk: 1550 },
+  '54': { home: 1650, stopDesk: 1550 },
+  '55': { home: 850, stopDesk: 700 },
+  '56': { home: 1650, stopDesk: 1550 },
+  '57': { home: 1650, stopDesk: 1550 },
+  '58': { home: 1650, stopDesk: 1550 },
+};
+
+const getWilayaCode = (wilayaLabel = '') => wilayaLabel.slice(0, 2);
+
+const getDeliveryPrice = (wilayaLabel, deliveryType) => {
+  const code = getWilayaCode(wilayaLabel);
+  const price = DELIVERY_PRICES_BY_WILAYA_CODE[code]?.[deliveryType];
+  return Number.isFinite(price) ? price : 0;
+};
+
 const TRANSLATIONS = {
   fr: {
     dir: 'ltr',
@@ -72,6 +144,7 @@ const TRANSLATIONS = {
     banner_payment: 'Paiement à la livraison',
     banner_quality: 'Qualité Garantie',
     banner_whatsapp: 'Réponse rapide via WhatsApp',
+    free_delivery_badge: 'Livraison Gratuite sur Alger (Stop Desk)',
     banner_help_line1: 'Des questions ou envie de commander rapidement ?',
     banner_help_line2: 'Contactez-nous sur WhatsApp',
     banner_help_cta: 'Commander via WhatsApp',
@@ -100,6 +173,14 @@ const TRANSLATIONS = {
     form_name: 'Nom Complet *',
     form_phone: 'Numéro de Téléphone *',
     form_wilaya: 'Wilaya *',
+    form_delivery_type: 'Type de livraison *',
+    delivery_home: 'À domicile',
+    delivery_stop_desk: 'Stop desk',
+    form_address: 'Adresse *',
+    shipping_fee: 'Frais de livraison',
+    free_shipping: 'Gratuit',
+    products_total: 'Prix total produits',
+    total_to_pay: 'Total à payer',
     form_qty: 'Quantité',
     form_product: 'Produit *',
     form_total: 'Total',
@@ -122,6 +203,7 @@ const TRANSLATIONS = {
     banner_payment: 'الدفع عند الاستلام',
     banner_quality: 'جودة مضمونة',
     banner_whatsapp: 'رد سريع على واتساب',
+    free_delivery_badge: 'توصيل مجاني للجزائر العاصمة (للمكتب)',
     banner_help_line1: 'عندك أسئلة أو حاب تدير طلبية بسرعة؟',
     banner_help_line2: 'تواصل معنا عبر واتساب',
     banner_help_cta: 'الطلب عبر واتساب',
@@ -150,6 +232,14 @@ const TRANSLATIONS = {
     form_name: 'الاسم الكامل *',
     form_phone: 'رقم الهاتف *',
     form_wilaya: 'الولاية *',
+    form_delivery_type: 'نوع التوصيل *',
+    delivery_home: 'توصيل للمنزل',
+    delivery_stop_desk: 'ستوب ديسك',
+    form_address: 'العنوان *',
+    shipping_fee: 'مصاريف التوصيل',
+    free_shipping: 'مجاني',
+    products_total: 'السعر الإجمالي للمنتجات',
+    total_to_pay: 'المبلغ الإجمالي',
     form_qty: 'الكمية',
     form_product: 'المنتج *',
     form_total: 'المجموع',
@@ -173,8 +263,8 @@ const PRODUCTS = [
     },
     images: [
       ASSETS.bbqPetit,
-      '/images/bbq_petit3.webp',
-      '/images/bbq_petit2.webp'
+      '/images/bbq_petit3.jpg',
+      '/images/bbq_petit2.jpg'
     ]
   },
   {
@@ -189,7 +279,7 @@ const PRODUCTS = [
     images: [
       ASSETS.bbqGrand,
       '/images/bbq_grand2.webp',
-      '/images/bbq_grand3.webp'
+      '/images/bbq_grand3.png'
     ]
   },
   {
@@ -204,13 +294,13 @@ const PRODUCTS = [
     images: [
       ASSETS.rechaudBois,
       '/images/rechaud2.webp',
-      '/images/rechaud3.png'
+      '/images/rechaud3.jpg'
     ]
   }
 ];
 
 export default function App() {
-  const [lang, setLang] = useState('fr');
+  const [lang, setLang] = useState('ar');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [allowBbqChoice, setAllowBbqChoice] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -228,6 +318,8 @@ export default function App() {
     name: '',
     phone: '',
     wilaya: '16 - Alger',
+    deliveryType: 'stopDesk',
+    address: '',
     quantity: 1
   });
 
@@ -317,18 +409,32 @@ export default function App() {
     goToNextRechaudPoster();
   };
 
-  const renderTextWithYalidineLogo = (text) => {
+  const renderTextWithYalidineLogo = (text, isRtl = false) => {
     const marker = 'Yalidine';
     if (!text?.includes(marker)) return text;
     const [before, after] = text.split(marker);
+
+    if (isRtl) {
+      return (
+        <span className="inline-flex items-center gap-1" dir="rtl">
+          <bdi>{before.trim()}</bdi>
+          <span className="inline-flex flex-row-reverse items-center gap-1 align-middle" dir="ltr">
+            <bdi>{marker}</bdi>
+            <img src={ASSETS.yalidineLogo} alt="Yalidine" className="h-8 w-auto" />
+          </span>
+          {after ? <bdi>{after}</bdi> : null}
+        </span>
+      );
+    }
+
     return (
       <>
-        {before}
-        <span className="inline-flex items-center gap-1 align-middle">
-          <span>{marker}</span>
+        <bdi>{before}</bdi>
+        <span className="inline-flex items-center gap-1 align-middle" dir="ltr">
+          <bdi>{marker}</bdi>
           <img src={ASSETS.yalidineLogo} alt="Yalidine" className="h-8 w-auto" />
         </span>
-        {after}
+        <bdi>{after}</bdi>
       </>
     );
   };
@@ -348,6 +454,10 @@ export default function App() {
   };
 
   const orderTotal = (selectedProduct?.price || 0) * Number(formData.quantity || 0);
+  const deliveryFee = getDeliveryPrice(formData.wilaya, formData.deliveryType);
+  const finalTotal = orderTotal + deliveryFee;
+  const isAlgerStopDeskFree = getWilayaCode(formData.wilaya) === '16' && formData.deliveryType === 'stopDesk';
+  const deliveryFeeLabel = isAlgerStopDeskFree ? t.free_shipping : `${deliveryFee} DA`;
 
   const whyPoints = [
     { icon: Package, text: t.why_1, tone: 'bg-orange-500/20 text-orange-300 border border-orange-400/30' },
@@ -392,14 +502,21 @@ export default function App() {
       return;
     }
 
+    if (formData.deliveryType === 'home' && !formData.address.trim()) {
+      alert(lang === 'fr' ? "Veuillez entrer votre adresse" : "يرجى إدخال العنوان.");
+      return;
+    }
+
     setIsSubmitting(true);
+    const deliveryFeeToSend = isAlgerStopDeskFree ? 0 : deliveryFee;
     const payload = {
       ...formData,
       product: selectedProduct.name.fr,
-      productAr: selectedProduct.name.ar,
-      total: orderTotal,
+      productsTotal: orderTotal,
+      deliveryFee: deliveryFeeToSend,
+      total: orderTotal + deliveryFeeToSend,
       date: new Date().toLocaleString(),
-      status: 'pending'
+      status: 'En attente'
     };
 
     try {
@@ -421,7 +538,7 @@ export default function App() {
 
       if (response.type === 'opaque') {
         setIsSuccess(true);
-        setFormData({ name: '', phone: '', wilaya: '16 - Alger', quantity: 1 });
+        setFormData({ name: '', phone: '', wilaya: '16 - Alger', deliveryType: 'stopDesk', address: '', quantity: 1 });
         return;
       }
 
@@ -437,7 +554,7 @@ export default function App() {
       }
 
       setIsSuccess(true);
-      setFormData({ name: '', phone: '', wilaya: '16 - Alger', quantity: 1 });
+      setFormData({ name: '', phone: '', wilaya: '16 - Alger', deliveryType: 'stopDesk', address: '', quantity: 1 });
     } catch (error) {
       console.error('Order submit error:', error);
       alert("Error / خطأ");
@@ -504,9 +621,22 @@ export default function App() {
           </div>
           
           <div className="relative max-w-4xl mx-auto z-10">
-            <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold mb-6 border border-white/20">
-              <Truck className="w-4 h-4 text-orange-400" /> 
-              <span>{renderTextWithYalidineLogo(t.hero_badge)}</span>
+            <div className="relative inline-flex justify-center mb-8">
+              <div className={`inline-flex items-center gap-2 bg-white/10 px-6 py-2.5 rounded-full text-sm sm:text-lg font-bold border border-white/20 ${lang === 'ar' ? 'flex-row-reverse' : ''}`}>
+                <Truck className="w-5 h-5 text-orange-400" /> 
+                <span
+                  dir={lang === 'ar' ? 'rtl' : 'ltr'}
+                  style={lang === 'ar' ? { unicodeBidi: 'plaintext' } : undefined}
+                >
+                  {renderTextWithYalidineLogo(t.hero_badge, lang === 'ar')}
+                </span>
+              </div>
+              <span
+                className="absolute left-1/2 -bottom-2 -translate-x-1/2 px-2 text-[10px] sm:text-sm font-black text-[#E1000F] whitespace-nowrap animate-[pulse_4s_ease-in-out_infinite] [text-shadow:0_0_8px_rgba(225,0,15,0.95),0_0_16px_rgba(225,0,15,0.8)]"
+                style={lang === 'ar' ? { unicodeBidi: 'plaintext' } : undefined}
+              >
+                {t.free_delivery_badge}
+              </span>
             </div>
             <h1 className="title-font text-4xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
               {t.hero_title_1} <br />
@@ -566,8 +696,11 @@ export default function App() {
           {PRODUCTS.map((product) => (
             <div key={product.id} className="group bg-white rounded-[2rem] overflow-hidden shadow-xl shadow-neutral-200/50 border border-neutral-100 flex flex-col transition-all hover:-translate-y-2">
               <div className="h-72 bg-neutral-100 relative overflow-hidden">
-                <div className="absolute top-4 right-4 z-10 bg-orange-600 text-white px-4 py-1.5 rounded-full font-black shadow-lg">
+                <div className="absolute top-4 right-4 z-10 bg-orange-600 text-white px-5 py-2 rounded-full text-base sm:text-lg font-black shadow-lg">
                   {product.price} DA
+                </div>
+                <div className="absolute bottom-1 left-1 z-10 max-w-[78%] rounded-sm bg-red-600 px-3 py-1.5 text-[10px] sm:text-xs font-black leading-tight text-white shadow-lg">
+                  {t.free_delivery_badge}
                 </div>
                 <img 
                   key={`${product.id}-${productImageIndexes[product.id] || 0}`}
@@ -1087,7 +1220,9 @@ export default function App() {
                         <p className="text-xs font-black text-orange-600 uppercase tracking-tighter">{selectedProduct?.size}</p>
                         <p className="text-zinc-950 font-black text-base leading-tight">{selectedProduct?.name[lang]}</p>
                         <p className="text-zinc-500 font-bold">{selectedProduct?.price} DA × {formData.quantity}</p>
-                        <p className="text-zinc-950 font-black">{t.form_total}: {orderTotal} DA</p>
+                        <p className="text-zinc-800 font-bold">{t.products_total}: {orderTotal} DA</p>
+                        <p className="text-zinc-800 font-bold">{t.shipping_fee}: {deliveryFeeLabel}</p>
+                        <p className="text-zinc-950 font-black">{t.total_to_pay}: {finalTotal} DA</p>
                       </div>
                     </div>
                   )}
@@ -1103,19 +1238,85 @@ export default function App() {
                       <input required type="tel" name="phone" value={formData.phone} onChange={handleInputChange} placeholder="0550 00 00 00" className="w-full px-5 py-3.5 bg-neutral-50 border border-neutral-200 rounded-2xl focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none font-black text-lg transition-all" dir="ltr" />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-black mb-2 text-neutral-400 uppercase tracking-widest">{t.form_wilaya}</label>
-                        <select name="wilaya" value={formData.wilaya} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-neutral-50 border border-neutral-200 rounded-2xl outline-none font-black text-sm appearance-none cursor-pointer">
-                          {WILAYAS.map(w => <option key={w} value={w}>{w}</option>)}
-                        </select>
+                    <div>
+                      <label className="block text-xs font-black mb-2 text-neutral-400 uppercase tracking-widest">{t.form_wilaya}</label>
+                      <select name="wilaya" value={formData.wilaya} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-neutral-50 border border-neutral-200 rounded-2xl outline-none font-black text-sm appearance-none cursor-pointer">
+                        {WILAYAS.map(w => <option key={w} value={w}>{w}</option>)}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-black mb-2 text-neutral-400 uppercase tracking-widest">{t.form_delivery_type}</label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label className={`flex items-center gap-3 rounded-2xl border px-4 py-3 cursor-pointer transition-all ${formData.deliveryType === 'stopDesk' ? 'border-zinc-800 bg-zinc-100' : 'border-neutral-200 bg-neutral-50 hover:bg-neutral-100'}`}>
+                          <input
+                            type="radio"
+                            name="deliveryType"
+                            value="stopDesk"
+                            checked={formData.deliveryType === 'stopDesk'}
+                            onChange={handleInputChange}
+                            className="h-4 w-4 accent-zinc-800"
+                          />
+                          <Package className="w-5 h-5 text-zinc-700" />
+                          <span className="font-black text-sm text-zinc-900">{t.delivery_stop_desk}</span>
+                        </label>
+
+                        <label className={`flex items-center gap-3 rounded-2xl border px-4 py-3 cursor-pointer transition-all ${formData.deliveryType === 'home' ? 'border-zinc-800 bg-zinc-100' : 'border-neutral-200 bg-neutral-50 hover:bg-neutral-100'}`}>
+                          <input
+                            type="radio"
+                            name="deliveryType"
+                            value="home"
+                            checked={formData.deliveryType === 'home'}
+                            onChange={handleInputChange}
+                            className="h-4 w-4 accent-zinc-800"
+                          />
+                          <House className="w-5 h-5 text-zinc-700" />
+                          <span className="font-black text-sm text-zinc-900">{t.delivery_home}</span>
+                        </label>
                       </div>
+                    </div>
+
+                    {formData.deliveryType === 'home' && (
+                      <div>
+                        <label className="block text-xs font-black mb-2 text-neutral-400 uppercase tracking-widest">{t.form_address}</label>
+                        <input
+                          required
+                          name="address"
+                          value={formData.address}
+                          onChange={handleInputChange}
+                          placeholder={lang === 'fr' ? 'Adresse complète' : 'العنوان الكامل'}
+                          className="w-full px-5 py-3.5 bg-neutral-50 border border-neutral-200 rounded-2xl focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none font-bold transition-all"
+                        />
+                      </div>
+                    )}
+
+                    <div>
                       <div>
                         <label className="block text-xs font-black mb-2 text-neutral-400 uppercase tracking-widest">{t.form_qty}</label>
                         <input type="number" min="1" name="quantity" value={formData.quantity} onChange={handleInputChange} className="w-full px-5 py-3.5 bg-neutral-50 border border-neutral-200 rounded-2xl outline-none font-black transition-all" />
                       </div>
                     </div>
-                    <p className="text-end text-sm font-black text-zinc-900">{t.form_total}: {orderTotal} DA</p>
+
+                    <div className="rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3.5 text-sm">
+                      <p className="flex items-center justify-between font-bold text-zinc-700">
+                        <span>{t.products_total}</span>
+                        <span>{orderTotal} DA</span>
+                      </p>
+                      <p className="mt-1 flex items-center justify-between font-bold text-zinc-700">
+                        <span>{t.shipping_fee}</span>
+                        <span>{deliveryFeeLabel}</span>
+                      </p>
+                      {isAlgerStopDeskFree && (
+                        <p className="mt-1 text-xs font-black text-emerald-600">
+                          {t.free_delivery_badge}
+                        </p>
+                      )}
+                      <div className="my-2 border-t border-dashed border-neutral-300" />
+                      <p className="flex items-center justify-between font-black text-zinc-900">
+                        <span>{t.form_total}</span>
+                        <span>{finalTotal} DA</span>
+                      </p>
+                    </div>
                   </div>
 
                   <button 
