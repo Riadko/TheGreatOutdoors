@@ -18,7 +18,7 @@ import {
   Coffee,
   PlayCircle,
 } from 'lucide-react';
-import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp, FaFacebookMessenger, FaEnvelope } from 'react-icons/fa6';
+import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp, FaFacebookMessenger, FaEnvelope, FaYoutube } from 'react-icons/fa6';
 import ReactCountryFlag from 'react-country-flag';
 
 const ORDER_API_URL = import.meta.env.VITE_ORDER_API_URL || '/.netlify/functions/order-notify';
@@ -632,7 +632,7 @@ export default function App() {
                 </span>
               </div>
               <span
-                className="absolute left-1/2 -bottom-2 -translate-x-1/2 px-2 text-[10px] sm:text-sm font-black text-[#E1000F] whitespace-nowrap animate-[pulse_4s_ease-in-out_infinite] [text-shadow:0_0_8px_rgba(225,0,15,0.95),0_0_16px_rgba(225,0,15,0.8)]"
+                className="absolute left-1/2 -bottom-2 -translate-x-1/2 px-2 text-[10px] sm:text-base font-black text-[#E1000F] whitespace-nowrap [text-shadow:0_0_8px_rgba(225,0,15,0.95),0_0_16px_rgba(225,0,15,0.8)]"
                 style={lang === 'ar' ? { unicodeBidi: 'plaintext' } : undefined}
               >
                 {t.free_delivery_badge}
@@ -1077,6 +1077,9 @@ export default function App() {
                 </a>
                 <a href="https://www.tiktok.com/@thegreatoutdoorsgrill" target="_blank" className="p-4 bg-neutral-100 text-neutral-600 rounded-2xl hover:bg-black hover:text-white transition-all" aria-label="TikTok">
                   <FaTiktok className="w-5 h-5" />
+                </a>
+                <a href="https://www.youtube.com/@thegreatoutdoorsgrill" target="_blank" className="p-4 bg-neutral-100 text-neutral-600 rounded-2xl hover:bg-red-600 hover:text-white transition-all" aria-label="YouTube">
+                  <FaYoutube className="w-5 h-5" />
                 </a>
                 <a href="mailto:thegreatoutdoorsgrill@gmail.com" target="_blank" className="p-4 bg-neutral-100 text-neutral-600 rounded-2xl hover:bg-orange-600 hover:text-white transition-all" aria-label="Email">
                   <FaEnvelope className="w-5 h-5" />
