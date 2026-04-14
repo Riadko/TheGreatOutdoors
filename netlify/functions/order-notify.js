@@ -4,19 +4,7 @@ const json = (statusCode, payload) => ({
   body: JSON.stringify(payload),
 });
 
-const required = [
-  'TWILIO_ACCOUNT_SID',
-  'TWILIO_AUTH_TOKEN',
-  'TWILIO_WHATSAPP_FROM',
-  'TWILIO_WHATSAPP_TO',
-];
-
-const toWhatsAppAddress = (value) => {
-  if (!value) return '';
-  return value.startsWith('whatsapp:') ? value : `whatsapp:${value}`;
-};
-
-const formatMessage = (order) => {
+const formatTelegramMessage = (order) => {
   const deliveryTypeLabel = order.deliveryType === 'home' ? 'A domicile' : 'Stop desk';
   return [
     'Nouvelle commande',
@@ -35,80 +23,49 @@ const formatMessage = (order) => {
   ].join('\n');
 };
 
-const sendTwilioWhatsApp = async (message) => {
-  const sid = process.env.TWILIO_ACCOUNT_SID;
-  const token = process.env.TWILIO_AUTH_TOKEN;
-  const from = toWhatsAppAddress(process.env.TWILIO_WHATSAPP_FROM);
-  const to = toWhatsAppAddress(process.env.TWILIO_WHATSAPP_TO);
+const sendTelegramNotification = async (order) => {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
 
-  const auth = Buffer.from(`${sid}:${token}`).toString('base64');
-  const endpoint = `https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`;
-  const body = new URLSearchParams({
-    From: from,
-    To: to,
-    Body: message,
-  });
+  if (!token || !chatId) {
+    return {
+      sent: false,
+      reason: 'Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID',
+    };
+  }
 
+  const endpoint = `https://api.telegram.org/bot${token}/sendMessage`;
+  const message = formatTelegramMessage(order);
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: {
-      Authorization: `Basic ${auth}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body,
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Twilio send failed: ${response.status} ${errorText}`);
-  }
-
-  return response.json();
-};
-
-const sendTwilioWhatsAppTemplate = async (order) => {
-  const sid = process.env.TWILIO_ACCOUNT_SID;
-  const token = process.env.TWILIO_AUTH_TOKEN;
-  const from = toWhatsAppAddress(process.env.TWILIO_WHATSAPP_FROM);
-  const to = toWhatsAppAddress(process.env.TWILIO_WHATSAPP_TO);
-  const contentSid = process.env.TWILIO_WHATSAPP_CONTENT_SID;
-
-  if (!contentSid) {
-    throw new Error('TWILIO_WHATSAPP_CONTENT_SID is required for WhatsApp template fallback');
-  }
-
-  const auth = Buffer.from(`${sid}:${token}`).toString('base64');
-  const endpoint = `https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`;
-  const body = new URLSearchParams({
-    From: from,
-    To: to,
-    ContentSid: contentSid,
-    ContentVariables: JSON.stringify({
-      1: order.product ?? '-',
-      2: order.quantity ?? '-',
-      3: order.name ?? '-',
-      4: order.phone ?? '-',
-      5: order.wilaya ?? '-',
-      6: `${order.total ?? '-'} DA`,
-      7: order.date ?? '-',
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: message,
+      disable_web_page_preview: true,
     }),
   });
 
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${auth}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body,
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Twilio template send failed: ${response.status} ${errorText}`);
+  let data = null;
+  try {
+    data = await response.json();
+  } catch {
+    data = null;
   }
 
-  return response.json();
+  if (!response.ok || !data?.ok) {
+    return {
+      sent: false,
+      reason: data?.description || `Telegram send failed: ${response.status}`,
+    };
+  }
+
+  return {
+    sent: true,
+    messageId: data?.result?.message_id,
+  };
 };
 
 const forwardToStorageWebhook = async (order) => {
@@ -135,14 +92,6 @@ export const handler = async (event) => {
     return json(405, { ok: false, error: 'Method not allowed' });
   }
 
-  const missing = required.filter((key) => !process.env[key]);
-  if (missing.length) {
-    return json(500, {
-      ok: false,
-      error: `Missing env vars: ${missing.join(', ')}. Add them in Netlify > Site configuration > Environment variables, then redeploy.`,
-    });
-  }
-
   let order;
   try {
     order = JSON.parse(event.body || '{}');
@@ -155,33 +104,21 @@ export const handler = async (event) => {
   }
 
   try {
-    const message = formatMessage(order);
-    let twilioResult;
-
-    try {
-      twilioResult = await sendTwilioWhatsApp(message);
-    } catch (error) {
-      const isOutsideWindow = String(error.message || '').includes('63016');
-      const hasTemplate = Boolean(process.env.TWILIO_WHATSAPP_CONTENT_SID);
-
-      if (!isOutsideWindow || !hasTemplate) {
-        throw error;
-      }
-
-      twilioResult = await sendTwilioWhatsAppTemplate(order);
-    }
-
+    // Keep Google Sheet as the source of truth and never block it on notifications.
     await forwardToStorageWebhook(order);
+    const telegramResult = await sendTelegramNotification(order);
 
     return json(200, {
       ok: true,
-      messageSid: twilioResult.sid,
-      templateFallback: Boolean(process.env.TWILIO_WHATSAPP_CONTENT_SID),
+      stored: true,
+      telegramNotified: telegramResult.sent,
+      telegramMessageId: telegramResult.messageId || null,
+      warning: telegramResult.sent ? null : telegramResult.reason,
     });
   } catch (error) {
     return json(500, {
       ok: false,
-      error: error.message || 'Notification failed',
+      error: error.message || 'Order storage failed',
     });
   }
 };
