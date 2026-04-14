@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - Page introuvable</title>
+    <meta name="robots" content="noindex" />
+    <style>
+      :root {
+        --bg: #fff7ed;
+        --card: #ffffff;
+        --text: #111827;
+        --muted: #6b7280;
+        --brand: #ea580c;
+        --brand-dark: #c2410c;
+        --wa: #10b981;
+        --wa-dark: #059669;
+        --ring: rgba(234, 88, 12, 0.18);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Inter, Segoe UI, Tahoma, Arial, sans-serif;
+        color: var(--text);
+        background:
+          linear-gradient(rgba(17, 24, 39, 0.62), rgba(17, 24, 39, 0.62)),
+          url('/images/hero-5.webp') center / cover no-repeat;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+      }
+
+      .card {
+        width: min(760px, 100%);
+        padding: 24px;
+        color: #ffffff;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+
+      .brand img {
+        width: 58px;
+        height: 58px;
+        object-fit: contain;
+      }
+
+      .brand strong {
+        font-size: 22px;
+        letter-spacing: -0.02em;
+      }
+
+      h1 {
+        margin: 8px 0 4px;
+        text-align: center;
+        font-size: clamp(30px, 7vw, 62px);
+        line-height: 1;
+        font-weight: 900;
+      }
+
+      .subtitle {
+        margin: 0;
+        text-align: center;
+        color: #e5e7eb;
+        font-size: clamp(14px, 2.2vw, 18px);
+      }
+
+      .actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 22px;
+      }
+
+      .btn-home {
+        appearance: none;
+        border: 0;
+        border-radius: 14px;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, var(--brand), #f59e0b);
+        color: #fff;
+        font-weight: 800;
+        text-decoration: none;
+        box-shadow: 0 10px 28px rgba(234, 88, 12, 0.32);
+        transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+      }
+
+      .btn-home:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 14px 34px rgba(234, 88, 12, 0.4);
+        background: linear-gradient(135deg, var(--brand-dark), #d97706);
+      }
+
+      .btn-home:focus-visible {
+        outline: 3px solid var(--ring);
+        outline-offset: 2px;
+      }
+
+      .wa-banner {
+        margin-top: 20px;
+        border: 1px solid #a7f3d0;
+        background: rgba(236, 253, 245, 0.95);
+        border-radius: 16px;
+        padding: 14px;
+      }
+
+      .wa-content {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      .wa-text {
+        display: grid;
+        gap: 2px;
+      }
+
+      .wa-text strong {
+        font-size: 15px;
+      }
+
+      .wa-text span {
+        color: #065f46;
+        font-weight: 700;
+        font-size: 14px;
+      }
+
+      .wa-link {
+        border-radius: 12px;
+        background: var(--wa);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 800;
+        padding: 10px 14px;
+        white-space: nowrap;
+        transition: background 0.15s ease;
+      }
+
+      .wa-link:hover {
+        background: var(--wa-dark);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <div class="brand">
+        <img src="/images/logo-1.webp" alt="The Great Outdoors" />
+        <strong>The Great Outdoors</strong>
+      </div>
+
+      <h1>404</h1>
+      <p class="subtitle">Cette page n'existe pas ou a ete deplacee.</p>
+
+      <div class="actions">
+        <a class="btn-home" href="/">Revenir a l'accueil</a>
+      </div>
+
+      <section class="wa-banner" aria-label="WhatsApp Help Banner">
+        <div class="wa-content">
+          <div class="wa-text">
+            <strong>Des questions ou envie de commander rapidement ?</strong>
+            <span>Contactez-nous sur WhatsApp</span>
+          </div>
+          <a class="wa-link" href="https://wa.me/213797350430" target="_blank" rel="noreferrer">Commander via WhatsApp</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
