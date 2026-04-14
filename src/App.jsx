@@ -56,7 +56,7 @@ const WILAYAS = [
   "41 - Souk Ahras", "42 - Tipaza", "43 - Mila", "44 - Aïn Defla", "45 - Naâma", 
   "46 - Aïn Témouchent", "47 - Ghardaïa", "48 - Relizane", "49 - El M'Ghair", 
   "50 - El Meniaa", "51 - Ouled Djellal", "52 - Bordj Baji Mokhtar", "53 - Béni Abbès", 
-  "54 - Timimoun", "55 - Touggourt", "56 - Djanet", "57 - In Salah", "58 - In Guezzam"
+  "54 - Timimoun", "55 - Touggourt", "56 - Djanet", "57 - In Salah"
 ];
 
 // Coller ici vos tarifs par code wilaya:
@@ -130,6 +130,66 @@ const getDeliveryPrice = (wilayaLabel, deliveryType) => {
   return Number.isFinite(price) ? price : 0;
 };
 
+const COMMUNES_BY_WILAYA = {
+  '01 - Adrar': ['Adrar', 'El Hataba', 'Aoulef', 'Reggane'],
+  '02 - Chlef': ['Chlef', 'Chlef (Cité Cherifi Kadour)', 'Chlef (Hay El Nasr)', 'Ténès'],
+  '03 - Laghouat': ['Aflou', 'Laghouat'],
+  '04 - Oum El Bouaghi': ['Aïn M\'lila', 'Oum el Bouaghi'],
+  '05 - Batna': ['Barika', 'Batna', 'Batna (Cité frères Lombarkia)'],
+  '06 - Béjaïa': ['Akbou', 'Béjaïa (Cité Tobal)', 'Béjaïa (Edimco)', 'El Kseur'],
+  '07 - Biskra': ['Biskra', 'El Kantara', 'Tolga'],
+  '08 - Béchar': ['Béchar', 'Béchar (Cité Es Salam)'],
+  '09 - Blida': ['Blida', 'Blida (Bab Dzair)', 'Boufarik', 'Bouinan', 'Larbaa', 'Mouzaia', 'Ouled Yaïch'],
+  '10 - Bouira': ['Aïn Bessem', 'Bouira', 'Lakhdaria', 'Sour El Ghouzlane'],
+  '11 - Tamanrasset': ['Tamanrasset', 'Tahaggart'],
+  '12 - Tébessa': ['Cheria', 'Tébessa', 'Skanska'],
+  '13 - Tlemcen': ['Chetouane', 'Maghnia', 'Remchi', 'Tlemcen', 'Mansourah', 'les Dahlias'],
+  '14 - Tiaret': ['Tiaret'],
+  '15 - Tizi Ouzou': ['Azazga', 'Beni Douala', 'Draâ Ben Khedda', 'Tizi Gheniff', 'Tizi Ouzou', 'Tizi Ouzou (Nouvelle Ville)'],
+  '16 - Alger': ['Aïn Benian', 'Alger Centre', 'Bab El Oued', 'Bab Ezzouar', 'Bachdjerrah', 'Baraki', 'Bir Mourad Raïs', 'Birkhadem', 'Birtouta', 'Bordj El Bahri', 'Bordj El Kiffan', 'Cheraga (Dar Diaf)', 'Cheraga (Plateau)', 'Dar El Beïda', 'Draria', 'Hussein Dey', 'Kouba', 'Les Eucalyptus', 'Mahelma', 'Mohammadia', 'Oued Smar', 'Ouled Fayet', 'Reghaïa', 'Rouïba', 'Zeralda'],
+  '17 - Djelfa': ['Aïn Oussara', 'Djelfa'],
+  '18 - Jijel': ['El Milia', 'Jijel', 'Kaous', 'Taher'],
+  '19 - Sétif': ['Aïn Arnat', 'Aïn Oulmene', 'Bougaa', 'El Eulma', 'El Eulma (Cité Sonatrach Smara S)', 'Sétif (Tinar)', 'Sétif (Maabouda)', 'Sétif (El Hidhab)', 'Sétif (Centre Ville)', 'Sétif (1014 Logement)'],
+  '20 - Saïda': ['Saïda'],
+  '21 - Skikda': ['Azzaba', 'Collo', 'El Harrouch', 'Skikda (Messiouen)', 'Skikda (L\'espérance )', 'Skikda (Faubourg)'],
+  '22 - Sidi Bel Abbès': ['Sidi Bel Abbes', 'Sidi Bel Abbes (Benhamouda)'],
+  '23 - Annaba': ['Annaba (Valmascort)', 'Annaba (Sidi Brahim)', 'Annaba (Sidi Achour)', 'El Bouni'],
+  '24 - Guelma': ['Guelma', 'Oued Zenati'],
+  '25 - Constantine': ['Constantine (Belle Vue)', 'Constantine (Sidi Mabrouk)', 'Constantine (Zouaghi)', 'Didouche Mourad', 'El Khroub', 'El Khroub (Nouvelle Ville Ali Mendjeli)', 'El Khroub (Nouvelle Ville)'],
+  '26 - Médéa': ['Beni Slimane', 'Médéa (M\'sallah)', 'Médéa (Pole Urbain)', 'Tablat'],
+  '27 - Mostaganem': ['Mostaganem (Salamandre ), Mostaganem (Kharouba)'],
+  '28 - M\'Sila': ['Berhoum', 'Bou Saâda', 'M\'Sila', 'Sidi Aïssa'],
+  '29 - Mascara': ['Mascara'],
+  '30 - Ouargla': ['Hassi Messaoud', 'Ouargla (Centre Ville)', 'Ouargla (Chetti el Wekal)'],
+  '31 - Oran': ['Arzew', 'Bir El Djir (El Morchid)', 'Bir El Djir (Fernand Ville)', 'Bir El Djir (ILAF Belkaïd)', 'Oran (Cité Djamel)', 'Oran (Gambetta)', 'Oran (Canastel)'],
+  '32 - El Bayadh': ['El Bayadh'],
+  '33 - Illizi': ['Illizi', 'In Amenas'],
+  '34 - Bordj Bou Arreridj': ['Bordj Bou Arreridj', 'Bordj Bou Arreridj (Nouveau Lycée)', 'Ras El Oued'],
+  '35 - Boumerdès': ['Bordj Menaiel', 'Boudouaou', 'Boumerdes', 'Hammedi'],
+  '36 - El Tarf': ['Dréan', 'El Tarf'],
+  '37 - Tindouf': ['Tindouf'],
+  '38 - Tissemsilt': ['Tissemsilt'],
+  '39 - El Oued': ['El Oued'],
+  '40 - Khenchela': ['Khenchela'],
+  '41 - Souk Ahras': ['Souk Ahras'],
+  '42 - Tipaza': ['Cherchell', 'Hadjout', 'Koléa', 'Tipaza'],
+  '43 - Mila': ['Chelghoum Laid', 'Ferdjioua', 'Mila (Rue De Zerghia)', 'Mili (Rue Ben Kara)'],
+  '44 - Aïn Defla': ['Aïn Defla (Centre Ville)', 'Aïn Defla (Cite Khyat Mohammed)', 'Khemis Miliana'],
+  '45 - Naâma': ['Mecheria'],
+  '46 - Aïn Témouchent': ['Aïn Témouchent', 'Beni Saf'],
+  '47 - Ghardaïa': ['Bounoura', 'Ghardaïa (Thenia)', 'Ghardaïa (Bouhraoua)'],
+  '48 - Relizane': ['Relizane'],
+  '49 - El M\'Ghair': ['Djamaa', 'El M\'Ghair'],
+  '50 - El Menia': ['El Menia'],
+  '51 - Ouled Djellal': ['Ouled Djellal'],
+  '52 - Bordj Baji Mokhtar': ['Bordj Baji Mokhtar'],
+  '53 - Béni Abbès': ['Béni Abbès'],
+  '54 - Timimoun': ['Timimoun'],
+  '55 - Touggourt': ['Touggourt'],
+  '56 - Djanet': ['Djanet'],
+  '57 - In Salah': ['In Salah']
+};
+
 const TRANSLATIONS = {
   fr: {
     dir: 'ltr',
@@ -155,7 +215,7 @@ const TRANSLATIONS = {
     bbq_detail_title: 'Barbecue Démontable Pratique et Robuste',
     bbq_detail_desc: 'Notre barbecue démontable est pensé pour vos sorties:\nMontage ⛰️ Forêt 🌳 Plage 🏖️ ou Camping 🏕️.\nRapide, structure stable et format facile à transporter. Il offre une cuisson régulière et un entretien simple.',
     rechaud_detail_title: 'Réchaud à Bois Compact et Polyvalent',
-    rechaud_detail_desc: 'Le Réchaud à Bois, compagnon idéal en Van 🚐, en Forêt 🌳, en Montage ⛰️ ou au Désert 🏜️, vous permet de faire bouillir de l\'eau, préparer un café ou cuisiner facilement en extérieur.\nSon design optimise la circulation de \'air pour une combustion efficace.',
+    rechaud_detail_desc: 'Le Réchaud à Bois, compagnon idéal en Van 🚐, en Forêt 🌳, en Montage ⛰️ ou au Désert 🏜️, vous permet de faire bouillir de l\'eau, préparer un café ou cuisiner facilement en extérieur.\nSon design optimise la circulation de l\'air pour une combustion efficace.',
     features: ['Montage simple et rapide', 'Format compact', 'Structure stable', 'Nettoyage facile'],
     rechaud_features: ['Montage simple et rapide', '6 pièces uniquement', 'Idéal pour café et thé'],
     video_label: 'Vidéo de démonstration',
@@ -173,6 +233,7 @@ const TRANSLATIONS = {
     form_name: 'Nom Complet *',
     form_phone: 'Numéro de Téléphone *',
     form_wilaya: 'Wilaya *',
+    form_commune: 'Commune *',
     form_delivery_type: 'Type de livraison *',
     delivery_home: 'À domicile',
     delivery_stop_desk: 'Stop desk',
@@ -232,6 +293,7 @@ const TRANSLATIONS = {
     form_name: 'الاسم الكامل *',
     form_phone: 'رقم الهاتف *',
     form_wilaya: 'الولاية *',
+    form_commune: 'البلدية *',
     form_delivery_type: 'نوع التوصيل *',
     delivery_home: 'توصيل للمنزل',
     delivery_stop_desk: 'ستوب ديسك',
@@ -318,10 +380,21 @@ export default function App() {
     name: '',
     phone: '',
     wilaya: '16 - Alger',
+    commune: 'Alger Centre',
     deliveryType: 'stopDesk',
     address: '',
     quantity: 1
   });
+
+  // Sync commune when wilaya changes
+  useEffect(() => {
+    const communesForWilaya = COMMUNES_BY_WILAYA[formData.wilaya];
+    if (communesForWilaya && communesForWilaya.length > 0) {
+      if (!communesForWilaya.includes(formData.commune)) {
+        setFormData(prev => ({ ...prev, commune: communesForWilaya[0] }));
+      }
+    }
+  }, [formData.wilaya]);
 
   useEffect(() => {
     setProductImageIndexes(PRODUCTS.reduce((acc, product) => {
@@ -538,7 +611,7 @@ export default function App() {
 
       if (response.type === 'opaque') {
         setIsSuccess(true);
-        setFormData({ name: '', phone: '', wilaya: '16 - Alger', deliveryType: 'stopDesk', address: '', quantity: 1 });
+        setFormData({ name: '', phone: '', wilaya: '16 - Alger', commune: 'Alger Centre', deliveryType: 'stopDesk', address: '', quantity: 1 });
         return;
       }
 
@@ -554,7 +627,7 @@ export default function App() {
       }
 
       setIsSuccess(true);
-      setFormData({ name: '', phone: '', wilaya: '16 - Alger', deliveryType: 'stopDesk', address: '', quantity: 1 });
+      setFormData({ name: '', phone: '', wilaya: '16 - Alger', commune: 'Alger Centre', deliveryType: 'stopDesk', address: '', quantity: 1 });
     } catch (error) {
       console.error('Order submit error:', error);
       alert("Error / خطأ");
@@ -1241,11 +1314,20 @@ export default function App() {
                       <input required type="tel" name="phone" value={formData.phone} onChange={handleInputChange} placeholder="0550 00 00 00" className="w-full px-5 py-3.5 bg-neutral-50 border border-neutral-200 rounded-2xl focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none font-black text-lg transition-all" dir="ltr" />
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-black mb-2 text-neutral-400 uppercase tracking-widest">{t.form_wilaya}</label>
-                      <select name="wilaya" value={formData.wilaya} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-neutral-50 border border-neutral-200 rounded-2xl outline-none font-black text-sm appearance-none cursor-pointer">
-                        {WILAYAS.map(w => <option key={w} value={w}>{w}</option>)}
-                      </select>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-black mb-2 text-neutral-400 uppercase tracking-widest">{t.form_wilaya}</label>
+                        <select name="wilaya" value={formData.wilaya} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-neutral-50 border border-neutral-200 rounded-2xl outline-none font-black text-sm appearance-none cursor-pointer">
+                          {WILAYAS.map(w => <option key={w} value={w}>{w}</option>)}
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-black mb-2 text-neutral-400 uppercase tracking-widest">{t.form_commune}</label>
+                        <select name="commune" value={formData.commune} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-neutral-50 border border-neutral-200 rounded-2xl outline-none font-black text-sm appearance-none cursor-pointer">
+                          {COMMUNES_BY_WILAYA[formData.wilaya]?.map(c => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                      </div>
                     </div>
 
                     <div>

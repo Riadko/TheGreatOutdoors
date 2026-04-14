@@ -25,6 +25,7 @@ const formatMessage = (order) => {
     `Nom: ${order.name ?? '-'}`,
     `Telephone: ${order.phone ?? '-'}`,
     `Wilaya: ${order.wilaya ?? '-'}`,
+    `Commune: ${order.commune ?? '-'}`,
     `Livraison: ${deliveryTypeLabel}`,
     `Adresse: ${order.deliveryType === 'home' ? (order.address ?? '-') : '-'}`,
     `Total produits: ${order.productsTotal ?? '-'} DA`,
