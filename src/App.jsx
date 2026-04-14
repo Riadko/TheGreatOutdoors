@@ -452,6 +452,7 @@ export default function App() {
   const [rechaudPosterIndex, setRechaudPosterIndex] = useState(0);
   const [isWhyInView, setIsWhyInView] = useState(false);
   const whySectionRef = useRef(null);
+  const hasProcessedDeepLink = useRef(false);
 
   const t = TRANSLATIONS[lang];
 
@@ -624,6 +625,30 @@ export default function App() {
     setIsModalOpen(true);
     setIsSuccess(false);
   };
+
+  useEffect(() => {
+    if (hasProcessedDeepLink.current) return;
+    hasProcessedDeepLink.current = true;
+
+    const params = new URLSearchParams(window.location.search);
+    const buyParam = params.get('buy');
+    if (!buyParam) return;
+
+    const normalizedBuy = buyParam.toLowerCase().trim();
+    const productAliases = {
+      bbq: 'bbq-grand',
+      bbqgrand: 'bbq-grand',
+      bbqpetit: 'bbq-petit',
+      rechaud: 'rechaud-bois',
+      rechaudbois: 'rechaud-bois'
+    };
+
+    const normalizedId = productAliases[normalizedBuy] || normalizedBuy;
+    const targetProduct = PRODUCTS.find((p) => p.id.toLowerCase() === normalizedId);
+    if (!targetProduct) return;
+
+    openOrderModal(targetProduct, { allowBbqChoice: normalizedBuy === 'bbq' });
+  }, []);
 
   const openVideoModal = (video) => {
     setActiveVideo(video);
