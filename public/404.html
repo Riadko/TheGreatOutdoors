@@ -31,26 +31,25 @@
         color: var(--text);
         background:
           linear-gradient(rgba(17, 24, 39, 0.62), rgba(17, 24, 39, 0.62)),
-          url('/images/hero-5.webp') center / cover no-repeat;
+          url('images/hero-5.webp') center / cover no-repeat;
         display: grid;
         place-items: start center;
-        padding: 8px 18px 18px;
       }
 
       .card {
         width: min(900px, 100%);
-        padding: 0 18px 14px;
+        padding: 0px 24px 24px;
         color: #ffffff;
         text-align: center;
       }
 
       .brand {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
         justify-content: center;
-        gap: 6px;
-        margin-bottom: 2px;
+        gap: 14px;
+        flex-wrap: nowrap;
       }
 
       .brand img {
@@ -61,10 +60,11 @@
       }
 
       .brand strong {
-        font-size: clamp(26px, 4vw, 44px);
+        font-size: clamp(26px, 3.5vw, 44px);
         letter-spacing: -0.02em;
         font-weight: 900;
         line-height: 1.05;
+        text-align: left;
       }
 
       .brand .accent {
@@ -72,9 +72,9 @@
       }
 
       h1 {
-        margin: 0 0 6px;
+        margin: -50px 0 6px;
         text-align: center;
-        font-size: clamp(72px, 16vw, 125px);
+        font-size: clamp(72px, 16vw, 120px);
         line-height: 0.92;
         font-weight: 900;
         text-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
@@ -94,9 +94,6 @@
         margin: 0 auto;
         border-radius: 24px;
         overflow: hidden;
-        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.24);
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        background: rgba(0, 0, 0, 0.18);
       }
 
       .video-wrap video {
@@ -187,12 +184,131 @@
       .wa-link:hover {
         background: var(--wa-dark);
       }
+
+      @media (max-width: 768px) {
+        .card {
+          padding: 18px 18px 24px;
+        }
+
+        .brand {
+          gap: 10px;
+        }
+
+        .brand img {
+          width: 150px;
+          height: 150px;
+        }
+
+        .brand strong {
+          font-size: clamp(24px, 7vw, 34px);
+        }
+
+        h1 {
+          margin: -30px 0 10px;
+          font-size: clamp(64px, 20vw, 96px);
+        }
+
+        .subtitle {
+          margin-bottom: 16px;
+          font-size: clamp(15px, 4.3vw, 18px);
+          line-height: 1.45;
+        }
+
+        .video-wrap {
+          width: min(420px, 100%);
+        }
+
+        .actions {
+          margin-top: 14px;
+        }
+
+        .wa-banner {
+          margin-top: 14px;
+          padding: 14px;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .card {
+          padding: 14px 12px 20px;
+        }
+
+        .brand {
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+        }
+
+        .brand img {
+          width: 124px;
+          height: 124px;
+        }
+
+        .brand strong {
+          text-align: center;
+          font-size: clamp(21px, 8vw, 30px);
+          line-height: 1.08;
+        }
+
+        h1 {
+          margin: -6px 0 10px;
+          font-size: clamp(62px, 25vw, 86px);
+          line-height: 0.88;
+        }
+
+        .subtitle {
+          margin-bottom: 18px;
+          max-width: 34ch;
+        }
+
+        .video-wrap {
+          border-radius: 18px;
+        }
+
+        .btn-home {
+          padding: 12px 18px;
+        }
+
+        .wa-banner {
+          margin-top: 16px;
+          border-radius: 14px;
+          padding: 12px;
+        }
+
+        .wa-content {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 12px;
+        }
+
+        .wa-text {
+          text-align: center;
+          gap: 4px;
+        }
+
+        .wa-text strong {
+          font-size: 14px;
+          line-height: 1.35;
+        }
+
+        .wa-text span {
+          font-size: 13px;
+        }
+
+        .wa-link {
+          display: block;
+          width: 100%;
+          text-align: center;
+          padding: 12px 14px;
+        }
+      }
     </style>
   </head>
   <body>
     <main class="card">
       <div class="brand">
-        <img src="/images/logo-2.webp" alt="The Great Outdoors" />
+        <img src="images/logo-2.webp" alt="The Great Outdoors" />
         <strong>The Great <span class="accent">Outdoors</span></strong>
       </div>
 
@@ -201,7 +317,7 @@
 
       <div class="video-wrap" aria-label="Vidéo de présentation">
         <video autoplay loop muted playsinline preload="metadata" controlsList="nodownload noplaybackrate" disablepictureinpicture>
-          <source src="/images/outputvid.webm" type="video/webm" />
+          <source src="images/outputvid.webm" type="video/webm" />
         </video>
       </div>
 
