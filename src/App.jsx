@@ -22,7 +22,7 @@ import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp, FaFacebookMessenger, Fa
 import ReactCountryFlag from 'react-country-flag';
 
 const ORDER_API_URL = import.meta.env.VITE_ORDER_API_URL || '/.netlify/functions/order-notify';
-const LEGACY_SCRIPT_URL = import.meta.env.VITE_SCRIPT_URL || '';
+const LEGACY_SCRIPT_URL = import.meta.env.VITE_SCRIPT_URL || import.meta.env.VITE_SCRIPT_URL_2 || '';
 const FB_REELS = {
   bbq: 'https://web.facebook.com/reel/906470382108067',
   rechaud: 'https://web.facebook.com/reel/1947114682855400'
@@ -697,20 +697,32 @@ export default function App() {
     };
 
     try {
-      let response = await fetch(ORDER_API_URL, {
+      const isLocalHost = typeof window !== 'undefined' &&
+        (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+      const postToLegacy = () => fetch(LEGACY_SCRIPT_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload)
       });
 
-      // Local Vite or static-only deployments may not expose Netlify Functions.
-      if (response.status === 404 && LEGACY_SCRIPT_URL) {
-        response = await fetch(LEGACY_SCRIPT_URL, {
+      let response;
+
+      if (isLocalHost && LEGACY_SCRIPT_URL) {
+        // In Vite dev, Netlify functions are not available on :5173.
+        response = await postToLegacy();
+      } else {
+        response = await fetch(ORDER_API_URL, {
           method: 'POST',
-          mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
+
+        // Static-only or fallback scenario: try Apps Script endpoint.
+        if (response.status === 404 && LEGACY_SCRIPT_URL) {
+          response = await postToLegacy();
+        }
       }
 
       if (response.type === 'opaque') {
