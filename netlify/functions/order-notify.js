@@ -68,6 +68,13 @@ const sendTelegramNotification = async (order) => {
   };
 };
 
+const forceSheetText = (value) => {
+  const stringValue = String(value ?? '').trim();
+  if (!stringValue) return '';
+  // Prefix with apostrophe so Google Sheets keeps the exact text value.
+  return stringValue.startsWith("'") ? stringValue : `'${stringValue}`;
+};
+
 const forwardToStorageWebhook = async (order) => {
   const webhook = process.env.ORDER_STORAGE_WEBHOOK;
   if (!webhook) return;
@@ -75,6 +82,7 @@ const forwardToStorageWebhook = async (order) => {
   // Keep zero values explicit for scripts using truthy checks (e.g., value || '-').
   const sheetSafeOrder = {
     ...order,
+    phone: forceSheetText(order.phone),
     deliveryFee: String(order.deliveryFee ?? ''),
     productsTotal: String(order.productsTotal ?? ''),
     total: String(order.total ?? ''),
